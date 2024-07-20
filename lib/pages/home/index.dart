@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
         _handleSocketMessage(message);
       });
       socket.connection.listen((event) {
-        print('Socket connected');
+        print('Socket connected to server: $host with event: $event');
       });
     } catch (e) {
       print("Error loading socket: $e");

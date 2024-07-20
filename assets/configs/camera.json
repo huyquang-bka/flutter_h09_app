@@ -1,11 +1,11 @@
 [
     {
-        "rtsp": "rtsp://admin:Atin%40123123@27.72.98.49:50902/profile2/media.smp",
+        "rtsp": "rtsp://root:Atin%40123@192.168.1.235/axis-media/media.amp",
         "title": "Camera làn vào",
         "direction": "in"
     },
     {
-        "rtsp": "rtsp://root:Atin%40123@27.72.98.49:50900/axis-media/media.amp",
+        "rtsp": "rtsp://admin:atin%402022@192.168.1.231/profile1/media.smp",
         "title": "Camera làn ra",
         "direction": "out"
     }
