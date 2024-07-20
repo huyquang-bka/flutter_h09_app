@@ -9,7 +9,6 @@ void main() async {
   setWindowMinSize(const Size(1400, 900));
   // set window name
   setWindowTitle('Kiểm soát ra vào H09');
-  DartVLC.initialize();
   runApp(const MyApp());
 }
 

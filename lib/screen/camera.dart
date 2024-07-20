@@ -15,6 +15,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   void initState() {
+    DartVLC.initialize();
     player = Player(id: widget.camera.id);
     player.open(Media.network(widget.camera.rtsp));
     super.initState();
