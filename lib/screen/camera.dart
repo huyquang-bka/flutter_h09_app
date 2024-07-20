@@ -15,7 +15,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   void initState() {
-    player = Player(id: 0);
+    player = Player(id: widget.camera.id);
     player.open(Media.network(widget.camera.rtsp));
     super.initState();
   }
@@ -47,10 +47,6 @@ class PlayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Video(player: player, showControls: false),
-    );
+    return Video(player: player, showControls: false);
   }
 }

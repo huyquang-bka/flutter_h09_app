@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_h09_app/components/event_card.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_h09_app/helpers/helpers_function.dart';
 import 'package:flutter_h09_app/models/camera.dart';
 import 'package:flutter_h09_app/models/event.dart';
 import 'package:flutter_h09_app/screen/camera.dart';
+import 'package:web_socket_client/web_socket_client.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,52 +19,90 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Camera> cameras = [];
-  List<EventCard> listEventIn = [
-      EventCard(event: Event(name: 'Nguyễn Huy Quang', time: '?', image: '', cameraUrl: '')),
-      EventCard(event: Event(name: 'Nguyễn A B', time: '?', image: '', cameraUrl: '')),
-      EventCard(event: Event(name: 'Hoàng Thị Vân Anh Anh Anh', time: '?', image: '', cameraUrl: '')),
-      EventCard(event: Event(name: '?', time: '?', image: '', cameraUrl: '')),
-    ];
-  
-  List<EventCard> listEventOut = [
-      EventCard(event: Event(name: 'Mai Hồng Ngọc', time: '?', image: '', cameraUrl: '')),
-      EventCard(event: Event(name: '?', time: '?', image: '', cameraUrl: '')),
-      EventCard(event: Event(name: '?', time: '?', image: '', cameraUrl: '')),
-      EventCard(event: Event(name: '?', time: '?', image: '', cameraUrl: '')),
-    ];
-  
+  List<EventCard> listEvent = List.generate(
+      4,
+      (index) =>
+          EventCard(event: Event(name: '', time: '?', image: '', rtsp: '')));
+  final backoff = LinearBackoff(
+    initial: const Duration(seconds: 0),
+    increment: const Duration(seconds: 1),
+    maximum: const Duration(seconds: 2),
+  );
+  late WebSocket socket;
+
   @override
   void initState() {
     _loadCameras();
+    _loadSocket();
     super.initState();
   }
 
   Future<void> _loadCameras() async {
-    try
-    {
+    try {
       String data = await rootBundle.loadString('assets/configs/camera.json');
       List<Camera> camerasFromConfig = loadCamerasFromConfig(data);
       setState(() {
-        cameras = camerasFromConfig;
+        for (Camera camera in camerasFromConfig) {
+          camera.id = cameras.length;
+          camera.events = List.from(listEvent);
+          cameras.add(camera);
+        }
       });
     } catch (e) {
       print("Error loading cameras: $e");
     }
   }
 
+  Future<void> _loadSocket() async {
+    try {
+      String hostJson =
+          await rootBundle.loadString('assets/configs/socket.json');
+      final String host = jsonDecode(hostJson)['host'];
+      socket = WebSocket(Uri.parse(host), backoff: backoff);
+      socket.messages.listen((message) {
+        _handleSocketMessage(message);
+      });
+      socket.connection.listen((event) {
+        print('Socket connected');
+      });
+    } catch (e) {
+      print("Error loading socket: $e");
+    }
+  }
+
+  void _handleSocketMessage(String message) {
+    final jsonMessage = jsonDecode(message);
+    final String rtsp = jsonMessage['rtsp'];
+    for (Camera camera in cameras) {
+      if (rtsp == camera.rtsp) {
+        Event event = Event.fromJson(jsonMessage);
+        // Update the event list of the camera, pop the oldest event and push the new event
+        setState(() {
+          camera.events.removeLast();
+          camera.events.insert(0, EventCard(event: event));
+        });
+        break;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //body is a column of CameraView widgets from the cameras list
-      body: cameras.isEmpty
-          ? const Center(child: CircularProgressIndicator()) // Show loading indicator while data is being fetched
-          : Row(
-            children: [
-              for (Camera camera in cameras)
-                CameraView(camera: camera, listEventCard: camera.direction == 'in' ? listEventIn : listEventOut),
-            ],
-          )
-    );
+        //body is a column of CameraView widgets from the cameras list
+        body: cameras.isEmpty
+            ? const Center(
+                child:
+                    CircularProgressIndicator()) // Show loading indicator while data is being fetched
+            : Row(
+                children: [
+                  for (Camera camera in cameras)
+                    CameraView(
+                      camera: camera,
+                      listEventCard: camera.events,
+                    ),
+                ],
+              ));
   }
 }
 
@@ -69,7 +110,8 @@ class CameraView extends StatefulWidget {
   final Camera camera;
   final List<EventCard> listEventCard;
 
-  const CameraView({super.key, required this.camera, required this.listEventCard});
+  const CameraView(
+      {super.key, required this.camera, required this.listEventCard});
 
   @override
   State<CameraView> createState() => _CameraViewState();
