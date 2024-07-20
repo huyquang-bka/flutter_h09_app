@@ -1,12 +1,9 @@
-import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_h09_app/pages/home/index.dart';
 
-void main() async 
+void main()
 {
-  // app initialization
   WidgetsFlutterBinding.ensureInitialized();
-  DartVLC.initialize();
   runApp(const MyApp());
 }
 
