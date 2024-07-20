@@ -21,8 +21,8 @@ class _HomePageState extends State<HomePage> {
   List<Camera> cameras = [];
   List<EventCard> listEvent = List.generate(
       4,
-      (index) => EventCard(
-          event: Event(name: '', time: '?', image: '', cameraUrl: '')));
+      (index) =>
+          EventCard(event: Event(name: '', time: '?', image: '', rtsp: '')));
   final backoff = LinearBackoff(
     initial: const Duration(seconds: 0),
     increment: const Duration(seconds: 1),
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         for (Camera camera in camerasFromConfig) {
           camera.id = cameras.length;
-          camera.events = listEvent;
+          camera.events = List.from(listEvent);
           cameras.add(camera);
         }
       });
@@ -74,12 +74,12 @@ class _HomePageState extends State<HomePage> {
     final jsonMessage = jsonDecode(message);
     final String rtsp = jsonMessage['rtsp'];
     for (Camera camera in cameras) {
-      if (camera.rtsp == rtsp) {
+      if (rtsp == camera.rtsp) {
         Event event = Event.fromJson(jsonMessage);
         // Update the event list of the camera, pop the oldest event and push the new event
         setState(() {
-          camera.events.removeAt(0);
-          camera.events.add(EventCard(event: event));
+          camera.events.removeLast();
+          camera.events.insert(0, EventCard(event: event));
         });
         break;
       }

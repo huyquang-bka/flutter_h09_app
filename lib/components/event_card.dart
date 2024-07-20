@@ -11,6 +11,7 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Uint8List imageBytes = base64Decode(event.image);
+    final bool isUnknown = event.name.toLowerCase() == "unknown";
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -22,8 +23,12 @@ class EventCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           margin: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
-            color: const Color(0xFF2F4F4F), // Dark Slate Gray background
+            color: isUnknown ? Colors.red[300] : Colors.green[300],
             borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isUnknown ? Colors.red : Colors.green,
+              width: 2,
+            ),
           ),
           child: Row(
             children: [
@@ -32,21 +37,22 @@ class EventCard extends StatelessWidget {
                 child: Container(
                   width: imageWidth,
                   height: imageHeight,
-                  padding: const EdgeInsets.all(8.0),
+                  // padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
                     color: Colors.black54,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.black, width: 1),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Center(
-                    child: event.image.isNotEmpty
-                        ? Image.memory(imageBytes, fit: BoxFit.cover)
-                        : const Icon(
-                            Icons.image_not_supported,
-                            size: 48,
-                            color: Colors.white,
-                          ),
-                  ),
+                  child: event.image.isNotEmpty
+                      ? Image.memory(
+                          imageBytes,
+                          fit: BoxFit.fill,
+                          filterQuality: FilterQuality.high,
+                        )
+                      : const Icon(
+                          Icons.image_not_supported,
+                          size: 48,
+                          color: Colors.white,
+                        ),
                 ),
               ),
               const SizedBox(width: 8.0),
@@ -60,7 +66,8 @@ class EventCard extends StatelessWidget {
                     children: [
                       _buildInfoChip('Thời gian', event.time,
                           fontSize: fontSize),
-                      _buildInfoChip('Trạng thái', event.cameraUrl,
+                      _buildInfoChip(
+                          'Đối tượng', isUnknown ? "Khách" : "Nhân viên",
                           fontSize: fontSize),
                       _buildInfoChip('Họ tên', event.name, fontSize: fontSize),
                     ],
@@ -79,7 +86,10 @@ class EventCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       child: Text(
         '$label: $value',
-        style: TextStyle(color: Colors.white, fontSize: fontSize),
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
