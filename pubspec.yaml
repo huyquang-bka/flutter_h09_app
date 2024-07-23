@@ -14,7 +14,6 @@ dependencies:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
       ref: fd519be1e8398c6b6c2062c2447bac960a71bc02
-
   dart_vlc: ^0.4.0
   web_socket_client: ^0.1.4
   cupertino_icons: ^1.0.6
