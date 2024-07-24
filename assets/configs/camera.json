@@ -5,7 +5,7 @@
         "direction": "in"
     },
     {
-        "rtsp": "",
+        "rtsp": "rtsp://root:Atin%40123@27.72.98.49:50900/axis-media/media.amp",
         "title": "Camera làn ra",
         "direction": "out"
     }

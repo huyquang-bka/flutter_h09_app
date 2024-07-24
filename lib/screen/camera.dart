@@ -65,6 +65,6 @@ class PlayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Video(player: player, showControls: true);
+    return Video(player: player, showControls: false);
   }
 }
