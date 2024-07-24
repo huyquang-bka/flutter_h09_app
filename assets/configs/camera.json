@@ -1,11 +1,11 @@
 [
     {
-        "rtsp": "rtsp://root:Atin%40123@192.168.1.235/axis-media/media.amp",
+        "rtsp": "http://192.168.1.195:6300/KV_001-GSDTVao",
         "title": "Camera làn vào",
         "direction": "in"
     },
     {
-        "rtsp": "rtsp://admin:atin%402022@192.168.1.231/profile1/media.smp",
+        "rtsp": "",
         "title": "Camera làn ra",
         "direction": "out"
     }

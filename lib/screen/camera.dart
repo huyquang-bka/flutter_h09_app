@@ -51,3 +51,4 @@ class PlayerWidget extends StatelessWidget {
     return Video(player: player, showControls: false);
   }
 }
+

@@ -1,19 +1,25 @@
 PODS:
+  - desktop_webview_window (0.0.1):
+    - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - window_size (0.0.2):
     - FlutterMacOS
 
 DEPENDENCIES:
+  - desktop_webview_window (from `Flutter/ephemeral/.symlinks/plugins/desktop_webview_window/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - window_size (from `Flutter/ephemeral/.symlinks/plugins/window_size/macos`)
 
 EXTERNAL SOURCES:
+  desktop_webview_window:
+    :path: Flutter/ephemeral/.symlinks/plugins/desktop_webview_window/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   window_size:
     :path: Flutter/ephemeral/.symlinks/plugins/window_size/macos
 
 SPEC CHECKSUMS:
+  desktop_webview_window: d4365e71bcd4e1aa0c14cf0377aa24db0c16a7e2
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   window_size: 339dafa0b27a95a62a843042038fa6c3c48de195
 
