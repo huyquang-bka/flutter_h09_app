@@ -21,8 +21,8 @@ class _HomePageState extends State<HomePage> {
   List<Camera> cameras = [];
   List<EventCard> listEvent = List.generate(
       4,
-      (index) =>
-          EventCard(event: Event(name: '', time: '?', image: '', rtsp: '', key: -1)));
+      (index) => EventCard(
+          event: Event(name: '', time: '?', image: '', rtsp: '', key: -1)));
   final backoff = LinearBackoff(
     initial: const Duration(seconds: 0),
     increment: const Duration(seconds: 1),
@@ -81,8 +81,10 @@ class _HomePageState extends State<HomePage> {
           //update to event that have same key
           for (int i = 0; i < camera.events.length; i++) {
             if (camera.events[i].event.key == event.key) {
-              camera.events[i] = EventCard(event: event);
-              break;
+              //remove and insert to the first position
+              camera.events.removeAt(i);
+              camera.events.insert(0, EventCard(event: event));
+              return;
             }
           }
           // if not, update to the oldest event
@@ -118,7 +120,8 @@ class CameraView extends StatefulWidget {
   final Camera camera;
   final List<EventCard> listEventCard;
 
-  const CameraView({super.key, required this.camera, required this.listEventCard});
+  const CameraView(
+      {super.key, required this.camera, required this.listEventCard});
 
   @override
   State<CameraView> createState() => _CameraViewState();
@@ -130,7 +133,7 @@ class _CameraViewState extends State<CameraView> {
   void _reloadPlayer() {
     setState(() {
       _isPlayerInitialized = false; // Trigger reinitialization
-      _isPlayerInitialized = true;  // Reset state to initialize player again
+      _isPlayerInitialized = true; // Reset state to initialize player again
     });
   }
 
@@ -163,7 +166,8 @@ class _CameraViewState extends State<CameraView> {
                       child: Center(
                         child: Text(
                           widget.camera.title,
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
                         ),
                       ),
                     ),

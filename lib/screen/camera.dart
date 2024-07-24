@@ -6,7 +6,8 @@ class CameraScreen extends StatefulWidget {
   final Camera camera;
   final bool isPlayerInitialized;
 
-  const CameraScreen({super.key, required this.camera, this.isPlayerInitialized = true});
+  const CameraScreen(
+      {super.key, required this.camera, this.isPlayerInitialized = true});
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -32,8 +33,11 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void didUpdateWidget(CameraScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.isPlayerInitialized != oldWidget.isPlayerInitialized && widget.isPlayerInitialized) {
-      _initPlayer();
+    if (widget.isPlayerInitialized != oldWidget.isPlayerInitialized &&
+        widget.isPlayerInitialized) {
+      setState(() {
+        _initPlayer();
+      });
     }
   }
 
