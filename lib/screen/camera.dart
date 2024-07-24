@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_h09_app/models/camera.dart';
 import 'package:dart_vlc/dart_vlc.dart';
+import 'package:flutter_h09_app/models/camera.dart';
 
 class CameraScreen extends StatefulWidget {
   final Camera camera;
-  const CameraScreen({super.key, required this.camera});
+  final bool isPlayerInitialized;
+
+  const CameraScreen({super.key, required this.camera, this.isPlayerInitialized = true});
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -15,10 +17,24 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   void initState() {
+    super.initState();
     DartVLC.initialize();
+    if (widget.isPlayerInitialized) {
+      _initPlayer();
+    }
+  }
+
+  void _initPlayer() {
     player = Player(id: widget.camera.id);
     player.open(Media.network(widget.camera.rtsp));
-    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(CameraScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isPlayerInitialized != oldWidget.isPlayerInitialized && widget.isPlayerInitialized) {
+      _initPlayer();
+    }
   }
 
   @override
@@ -44,11 +60,11 @@ class _CameraScreenState extends State<CameraScreen> {
 
 class PlayerWidget extends StatelessWidget {
   final Player player;
+
   const PlayerWidget({super.key, required this.player});
 
   @override
   Widget build(BuildContext context) {
-    return Video(player: player, showControls: false);
+    return Video(player: player, showControls: true);
   }
 }
-

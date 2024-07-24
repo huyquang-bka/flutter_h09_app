@@ -3,12 +3,14 @@ class Event {
   final String time;
   final String image; // base64 encoded string
   final String rtsp;
+  final int? key;
 
   Event({
     required this.name,
     required this.time,
     required this.image,
     required this.rtsp,
+    required this.key,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class Event {
       time: json['time'],
       image: json['image'],
       rtsp: json['rtsp'],
+      key: json['key'],
     );
   }
 
@@ -26,6 +29,7 @@ class Event {
       'time': time,
       'image': image,
       'rtsp': rtsp,
+      'key': key,
     };
   }
 }
